@@ -36,6 +36,7 @@ class App {
     this.inputEl = el.querySelector('#file-input');
     this.validationCtrl = new ValidationController(el);
 
+    this.loadFromAssetsUrlIfNecessary();
     this.createDropzone();
     this.hideSpinner();
 
@@ -48,6 +49,21 @@ class App {
 
     if (options.model) {
       this.view(options.model, '', new Map());
+    }
+  }
+  /**
+   * Load assets from search query params
+   */
+  loadFromAssetsUrlIfNecessary() {
+    const url = location.search;
+    const query = url.substr(1);
+    const result = {};
+    query.split('&').forEach(function (part) {
+      const item = part.split('=');
+      result[item[0]] = decodeURIComponent(item[1]);
+    });
+    if (result.assetUrl) {
+      this.view(result.assetUrl, '', {has: () => false});
     }
   }
 
